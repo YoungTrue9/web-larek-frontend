@@ -40,3 +40,6 @@ npm run build
 ```
 yarn build
 ```
+## Cхема проекта
+При переходе по ссылки : https://drive.google.com/file/d/1iTYSfZzsEdM217wgPc_qx8JMDnFhwxUD/view
+Нужно нажать на кнопку 'Открыть в приложение "draw.io"'. После этого откроется сайт с UML схемой проекта.
