@@ -92,17 +92,17 @@ yarn build
 Класс ```EventEmitter``` обеспечивает работу событий исправно. Функциональность класса стандартная: возможность установить или же снять слушатели событий, так же вызывать слушатель при возникновении события.
 
 #### Методы
-- ```on(event: EventName, callback: (data: T) => void): void``` <br>
+```on(event: EventName, callback: (data: T) => void): void``` <br>
 Устанавливает обработчик на событие. <br>
 
 - ```event:``` Имя события.<br>
 - ```callback:``` Функция обработчик.<br>
-- ```off(eventName: EventName, callback: Subscriber): void```<br>
+```off(eventName: EventName, callback: Subscriber): void```<br>
 Снимает обработчик с события.<br>
 
 - ```eventName:``` Имя события.<br>
 - ```callback:``` Функция обработчик.<br>
-- ```emit(eventName: string, data?: T): void```<br>
+```emit(eventName: string, data?: T): void```<br>
 Инициирует событие с данными.
 
 - ```eventName:``` Имя события.<br>
