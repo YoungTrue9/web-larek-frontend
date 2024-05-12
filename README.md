@@ -143,12 +143,12 @@ export interface IAppState {
 
 
 
- ### Класс ```ProductItem```
+ ### Класс ```ProductsItem```
 Класс в котором происходит хранение данных. 
 Заголовок, описание, категория, изображение, цена.
 ```Model<T>``` по интерфейсу ```IProductItem```
 ```
-export interface IProductItem {
+export interface IProductsItem {
   id: string;
   title: string;
   description: string;
@@ -231,11 +231,11 @@ interface ICardActions {
 
 
 
-### Класс ```CardBasket```
+### Класс ```CardBaskets```
 Данный класс нужен для отображения карточек товаров в каталоге.
-Расширение базовым абстрактным классом ```Component<T>``` по интерфейсу ```ICardBasket```
+Расширение базовым абстрактным классом ```Component<T>``` по интерфейсу ```ICardBaskets```
 ```
-interface ICardBasket {
+interface ICardBaskets {
   title: string;
   price: number;
   index: number;
@@ -283,7 +283,7 @@ interface IPage {
 #### Конструктор
 - принимает ```container``` типа ```HTMLElement``` и обьект ```event``` с типом ```IEvent```, передает ```container``` в родительский конструктор.
 - сохранение необходимых элементов в разметки поля.
-- на кнопку корзины ```basket``` вешаем слушатель события ```click```. (событие basket:open)
+- на кнопку корзины ```basket``` вешаем слушатель события ```click```. 
 
 
 
@@ -347,7 +347,7 @@ interface IBasket {
 #### Конструктор
 - принимает ```container``` с типом ```HTMLElement``` и обьект ```actions``` с типом ```IEvent```
 - передает ```container``` в родительский конструктор, сохраняет необходимые элементы разметки в полях
-- Если мы имеем ```button``` то вешаем на него ```click``` прослушку события, и при этом регистрацией события (order:open)
+- Если мы имеем ```button``` то вешаем на него ```click``` прослушку события, и при этом регистрацией события 
 
 
 #### Поля 
@@ -416,10 +416,10 @@ export interface IOrderForm {
 ### Класс ```Form<T>```
 Данный класс нужен для валидации формы.
 
-Расширяется классом ```Component<T>``` по интерфейсу ```IFormState```
+Расширяется классом ```Component<T>``` по интерфейсу ```IFormStates```
 
 ```
-interface IFormState {
+interface IFormStates {
   valid: boolean;
   errors: string[];
 }
