@@ -569,4 +569,4 @@ interface ISuccessActions {
 
 
 #### Методы
-- ```set total``` --установка значения общей суммы
+- ```set total(value: number)``` --установка значения общей суммы стоимости.
