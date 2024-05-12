@@ -112,7 +112,7 @@ yarn build
 
 ## Методы:
 
-- ```on<T extends object>(eventName: EventName, callback: (event: T) => void)```: Подписывает на событие с заданным именем.
+- ```on(eventName: EventName, callback: (event: T) => void)```: Подписывает на событие с заданным именем.
 
 - - ```eventName ```: Имя события для подписки.<br>
 - - ```callback ```: Функция обратного вызова для события.<br>
