@@ -144,3 +144,16 @@ export interface IAppState {
 
 
  ## Класс ```ProductItem```
+Класс в котором происходит хранение данных. 
+Заголовок, описание, категория, изображение, цена.
+```Model<T>``` по интерфейсу ```IProductItem```
+```
+export interface IProductItem {
+  id: string;
+  title: string;
+  description: string;
+  category: string;
+  image: string;
+  price: number | null;
+}
+```
