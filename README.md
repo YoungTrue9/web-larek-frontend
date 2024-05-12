@@ -105,23 +105,23 @@ yarn build
 
 ## Методы:
 
-on<T extends object>(eventName: EventName, callback: (event: T) => void): Подписывает на событие с заданным именем.
+```on<T extends object>(eventName: EventName, callback: (event: T) => void)```: Подписывает на событие с заданным именем.
 
-eventName: Имя события для подписки.
-callback: Функция обратного вызова для события.
-off(eventName: EventName, callback: Subscriber): Отписывает от события.
+```eventName ```: Имя события для подписки.
+```callback ```: Функция обратного вызова для события.
+```off(eventName: EventName, callback: Subscriber) ```: Отписывает от события.
 
-eventName: Имя события для отписки.
-callback: Функция обратного вызова для удаления.
-emit<T extends object>(eventName: string, data?: T): Инициирует событие с данными.
+```eventName```: Имя события для отписки.
+```callback```: Функция обратного вызова для удаления.
+```emit<T extends object>(eventName: string, data?: T)```: Инициирует событие с данными.
 
-eventName: Имя инициируемого события.
-data: Данные для обработчиков события.
-onAll(callback: (event: EmitterEvent) => void): Подписывается на все события.
+```eventName```: Имя инициируемого события.
+```data```: Данные для обработчиков события.
+```onAll(callback: (event: EmitterEvent) => void)```: Подписывается на все события.
 
-callback: Функция обратного вызова для всех событий.
-offAll(): Снимает все обработчики событий.
-trigger<T extends object>(eventName: string, context?: Partial<T>): Создает триггер для события.
+```callback ```: Функция обратного вызова для всех событий.
+```offAll() ```: Снимает все обработчики событий.
+```trigger<T extends object>(eventName: string, context?: Partial<T>)```: Создает триггер для события.
 
 eventName: Имя события для триггера.
 context: Контекст для события при инициации.
