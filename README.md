@@ -120,7 +120,7 @@ yarn build
 
 - - ```eventName```: Имя события для отписки.<br>
 - - ```callback```: Функция обратного вызова для удаления.<br>
-- ```emit<T extends object>(eventName: string, data?: T)```: Инициирует событие с данными.
+- ```emit(eventName: string, data?: T)```: Инициирует событие с данными.
 
 - - ```eventName```: Имя инициируемого события.<br>
 - - ```data```: Данные для обработчиков события.<br>
@@ -128,7 +128,7 @@ yarn build
 
 - - ```callback ```: Функция обратного вызова для всех событий.<br>
 - - ```offAll() ```: Снимает все обработчики событий.<br>
-- ```trigger<T extends object>(eventName: string, context?: Partial<T>)```: Создает триггер для события.
+- ```trigger(eventName: string, context?: Partial<T>)```: Создает триггер для события.
 
 - - ```eventName```: Имя события для триггера.
 - - ```context```: Контекст для события при инициации.
