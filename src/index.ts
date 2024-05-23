@@ -33,19 +33,19 @@ const page = new Page(document.body, Evtemitter); // основная стран
 const modal = new Modal(ensureElement<HTMLElement>('#modal-container'), Evtemitter) // модальные окна 
 
 // Шаблоны для нашего сайта 
-const successTpl = ensureElement<HTMLTemplateElement>('#success'); // сообщение об успешном заказе
-const cardPreviewTpl = ensureElement<HTMLTemplateElement>('#card-preview'); // отображение карточек на экране
-const cardCatalogTpl = ensureElement<HTMLTemplateElement>('#card-catalog'); // каталог карточек
-const cardBasketTpl = ensureElement<HTMLTemplateElement>('#card-basket'); // корзина открытая в которой лежат товары
+const successTemplate = ensureElement<HTMLTemplateElement>('#success'); // сообщение об успешном заказе
+const cardPreviewTemplate = ensureElement<HTMLTemplateElement>('#card-preview'); // отображение карточек на экране
+const cardCatalogTemplate = ensureElement<HTMLTemplateElement>('#card-catalog'); // каталог карточек
+const cardBasketTemplate = ensureElement<HTMLTemplateElement>('#card-basket'); // корзина открытая в которой лежат товары
 // ------------------------вот это мы будем переиспользовать постоянно для нашего интерфейса------------------------
-const orderTpl = ensureElement<HTMLTemplateElement>('#order'); // модальное окно для заказа
-const basketTpl = ensureElement<HTMLTemplateElement>('#basket'); // корзина для модальное окно
-const contactsTpl = ensureElement<HTMLTemplateElement>('#contacts'); // контакты человека для модального кона
+const orderTemplate = ensureElement<HTMLTemplateElement>('#order'); // модальное окно для заказа
+const basketTemplate = ensureElement<HTMLTemplateElement>('#basket'); // корзина для модальное окно
+const contactsTemplate = ensureElement<HTMLTemplateElement>('#contacts'); // контакты человека для модального кона
 
 // Это части интерфейсов которые мы будем использовать постоянно и изменять их
-const basket = new Basket(cloneTemplate<HTMLTemplateElement>(basketTpl), Evtemitter); // корзина для товаров
-const order = new Order(cloneTemplate<HTMLFormElement>(orderTpl), Evtemitter); // заказ покупателя
-const contacts = new Сontacts(cloneTemplate<HTMLFormElement>(contactsTpl), Evtemitter); // данные о покупателе
+const basket = new Basket(cloneTemplate<HTMLTemplateElement>(basketTemplate), Evtemitter); // корзина для товаров
+const order = new Order(cloneTemplate<HTMLFormElement>(orderTemplate), Evtemitter); // заказ покупателя
+const contacts = new Сontacts(cloneTemplate<HTMLFormElement>(contactsTemplate), Evtemitter); // данные о покупателе
 
 // Бизнес-логика нашего проекта
 
@@ -54,7 +54,7 @@ const contacts = new Сontacts(cloneTemplate<HTMLFormElement>(contactsTpl), Evte
 Evtemitter.on('items:changed', () => {
     // передача ключ и значение
   page.catalog = appData.catalog.map((item) => {
-    const card = new Card(cloneTemplate(cardCatalogTpl), {
+    const card = new Card(cloneTemplate(cardCatalogTemplate), {
         // coбытие "card:select"
       onClick: () => Evtemitter.emit('card:select', item) 
     });
@@ -79,7 +79,7 @@ Evtemitter.on('card:select', (item: Product) => {
 // событие "preview:changed"
 Evtemitter.on('preview:changed', (item: Product) => {
     //делаем клонирование карточки и дублируем через рендер туда информацию
-  const card = new CardPreview(cloneTemplate(cardPreviewTpl), {
+  const card = new CardPreview(cloneTemplate(cardPreviewTemplate), {
     // событие "card:add"
     onClick: () => Evtemitter.emit('card:add', item)
   });
@@ -114,7 +114,7 @@ Evtemitter.on('card:remove', (item: Product) => {
     basket.total = appData.getTotal();
     let a = 1;
     basket.items = appData.bskt.map((item) => {
-      const card = new CardBasket(cloneTemplate(cardBasketTpl), {
+      const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
         // событие "card:remove"
         onClick: () => Evtemitter.emit('card:remove', item)
       });
@@ -136,7 +136,7 @@ Evtemitter.on('basket:open', () => {
   basket.total = appData.getTotal();
   let a = 1;
   basket.items = appData.bskt.map((item) => {
-    const card = new CardBasket(cloneTemplate(cardBasketTpl), {
+    const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
         // событие "card:remove"
       onClick: () => Evtemitter.emit('card:remove', item)
     });
@@ -151,31 +151,35 @@ Evtemitter.on('basket:open', () => {
   })
 })
 
+// Изменение полей контактов + сохранение
+Evtemitter.on(/^contacts\..*:change/, (data: { field: keyof IOrderForm, value: string }) => {
+    appData.setContactField(data.field, data.value);
+  });
+  
+  // Изменение полей заказа + сохранение
+  Evtemitter.on(/^order\..*:change/, (data: { field: keyof IOrderForm, value: string }) => {
+    appData.setOrderField(data.field, data.value);
+  });
+  
+  // Изменение полей оплаты + сохранение
+  // событие "payment:change"
+  Evtemitter.on('payment:change', (item: HTMLButtonElement) => {
+    appData.order.payment = item.name;
+  })
+
 // Изменение валидации формы
 // событие "formErrors:change"
 Evtemitter.on('formErrors:change', (errors: Partial<IOrderForm>) => {
-  const { phone, email, address, payment } = errors;
+  const { phone, email, payment, address } = errors;
   order.valid = !address && !payment;
   contacts.valid = !email && !phone;
-  order.errors = Object.values({address, payment}).filter(a => !!a).join('; ');
-  contacts.errors = Object.values({phone, email}).filter(a => !!a).join('; ');
+  order.errors = Object.values({address, payment}).filter(
+    element => !!element
+    ).join('; ');
+  contacts.errors = Object.values({phone, email}).filter(
+    element => !!element
+    ).join('; ');
 });
-
-// Изменение полей контактов + сохранение
-Evtemitter.on(/^contacts\..*:change/, (data: { field: keyof IOrderForm, value: string }) => {
-  appData.setContactsField(data.field, data.value);
-});
-
-// Изменение полей заказа + сохранение
-Evtemitter.on(/^order\..*:change/, (data: { field: keyof IOrderForm, value: string }) => {
-  appData.setOrderField(data.field, data.value);
-});
-
-// Изменение полей оплаты + сохранение
-// событие "payment:change"
-Evtemitter.on('payment:change', (item: HTMLButtonElement) => {
-  appData.order.payment = item.name;
-})
 
 // Открытие модального окна и добавление в него рендера с информацией
 // событие "order:open"
@@ -204,17 +208,29 @@ Evtemitter.on('order:submit', () => {
   });
 })
 
+// Блокируем прокрутку страницы если открыта модалка
+// событие "modal:open" 
+Evtemitter.on('modal:open', () => {
+    page.locked = true;
+});
+
+// Разблокируем прокрутку страницы если открыта модалка
+// событие "modal:close" 
+Evtemitter.on('modal:close', () => {
+    page.locked = false;
+});
+
 // Открытие окна контактов при форме заказа
 // событие "contacts:submit" 
 Evtemitter.on('contacts:submit', () => {
     Api.orderProducts(appData.order)
-    .then((result) => {
-      console.log(appData.order)
-      const success = new Success(cloneTemplate(successTpl), {
+    .then(() => {
+      console.log(appData.order) // выводим данные о заказе, можно отключить данный console.log
+      const success = new Success(cloneTemplate(successTemplate), {
         onClick: () => {
-          modal.close();
-          appData.clearBasket();
-          page.counter = appData.bskt.length;
+          modal.close(); // после заказа закрытие модалки (1)
+          appData.clearBasket(); // после заказа закрытие модалки, закрытие корзины (2)
+          page.counter = appData.bskt.length; 
         }
       });
     
@@ -229,20 +245,9 @@ Evtemitter.on('contacts:submit', () => {
     })
 });
 
-// Блокируем прокрутку страницы если открыта модалка
-// событие "modal:open" 
-Evtemitter.on('modal:open', () => {
-    page.locked = true;
-});
-
-// Разблокируем прокрутку страницы если открыта модалка
-// событие "modal:close" 
-Evtemitter.on('modal:close', () => {
-    page.locked = false;
-});
 
 // Получаем товар с сервера
-Api.getProductList()
+Api.getProductList() // откласса Apilarek
   .then(appData.setCatalog.bind(appData))
   .catch(error => {
     console.log(error);
