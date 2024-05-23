@@ -29,7 +29,7 @@ export class Modal extends Component<IModalData> {
 	}
 
 	open() {
-        this.toggleClass(this.container, 'modal_active', true)
+		this.toggleClass(this.container, 'modal_active', true)
 		this.events.emit('modal:open');
 	}
 
