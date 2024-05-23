@@ -77,11 +77,11 @@ export class AppData extends Model<IAppState> {
         this.events.emit('order:ready', this.order);
     } 
   }
-  // установка поля контактов (дописать в readme.md)
-  setContactsField(field: keyof IOrderForm, value: string) {
+  // установка поля контактов
+  setContactField(field: keyof IOrderForm, value: string) {
     this.order[field] = value;
 
-    if (this.validateContacts()) {
+    if (this.validateContact()) {
         this.events.emit('order:ready', this.order);
     } 
   }
@@ -96,8 +96,8 @@ export class AppData extends Model<IAppState> {
       this.events.emit('formErrors:change', this.formErrors);
       return Object.keys(errors).length === 0;
   }
-  // проводим валидацию контактов пользователя (дописать в readme.md)
-  validateContacts() {
+  // проводим валидацию контактов пользователя 
+  validateContact() {
       const errors: typeof this.formErrors = {};
       // если нету email то выводим ошибку
       if (!this.order.email) {
