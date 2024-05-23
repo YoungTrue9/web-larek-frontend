@@ -95,9 +95,8 @@ Evtemitter.on('preview:changed', (item: Product) => {
   });
 });
 
-// Пользователь добавил товар в корзину: 
-// - сохранить эти данные в заказ и корзине
-// - инкрементировать счетчик
+// Пользователь добавил товар в корзину, сохраняем данные и делаем счетчик.
+// событие "card:add"
 Evtemitter.on('card:add', (item: Product) => {
   appData.addToOrder(item);
   appData.setProductToBasket(item);
@@ -105,42 +104,46 @@ Evtemitter.on('card:add', (item: Product) => {
   modal.close();
 })
 
-// Открытие корзины
-Evtemitter.on('basket:open', () => {
-  basket.setDisabled(basket.button, appData.statusBasket);
-  basket.total = appData.getTotal();
-  let i = 1;
-  basket.items = appData.bskt.map((item) => {
-    const card = new CardBasket(cloneTemplate(cardBasketTpl), {
-      onClick: () => Evtemitter.emit('card:remove', item)
-    });
-    return card.render({
-      title: item.title,
-      price: item.price,
-      index: i++
-    });
-  })
-  modal.render({
-    content: basket.render()
-  })
-})
-
-// Удаление товара из корзины
+// Удаление товара из корзины, удаление данных и снижение числа в счетчике
+// событие "card:remove"
 Evtemitter.on('card:remove', (item: Product) => {
-  appData.removeProductToBasket(item);
-  appData.removeFromOrder(item);
-  page.counter = appData.bskt.length;
+    appData.removeProductToBasket(item);
+    appData.removeFromOrder(item);
+    page.counter = appData.bskt.length;
+    basket.setDisabled(basket.button, appData.statusBasket);
+    basket.total = appData.getTotal();
+    let a = 1;
+    basket.items = appData.bskt.map((item) => {
+      const card = new CardBasket(cloneTemplate(cardBasketTpl), {
+        // событие "card:remove"
+        onClick: () => Evtemitter.emit('card:remove', item)
+      });
+      return card.render({
+        title: item.title, // возвращение названия
+        price: item.price, // возвращение цены
+        index: a++ // возвращение индекса
+      });
+    })
+    modal.render({
+      content: basket.render()
+    })
+  })
+
+// Открытие корзины
+// событие "basket:open"
+Evtemitter.on('basket:open', () => {
   basket.setDisabled(basket.button, appData.statusBasket);
   basket.total = appData.getTotal();
   let a = 1;
   basket.items = appData.bskt.map((item) => {
     const card = new CardBasket(cloneTemplate(cardBasketTpl), {
+        // событие "card:remove"
       onClick: () => Evtemitter.emit('card:remove', item)
     });
     return card.render({
-      title: item.title,
-      price: item.price,
-      index: a++
+        title: item.title, // возвращение названия
+        price: item.price, // возвращение цены
+        index: a++ // возвращение индекса
     });
   })
   modal.render({
@@ -149,12 +152,13 @@ Evtemitter.on('card:remove', (item: Product) => {
 })
 
 // Изменение валидации формы
+// событие "formErrors:change"
 Evtemitter.on('formErrors:change', (errors: Partial<IOrderForm>) => {
-  const { email, phone, address, payment } = errors;
+  const { phone, email, address, payment } = errors;
   order.valid = !address && !payment;
   contacts.valid = !email && !phone;
-  order.errors = Object.values({address, payment}).filter(i => !!i).join('; ');
-  contacts.errors = Object.values({phone, email}).filter(i => !!i).join('; ');
+  order.errors = Object.values({address, payment}).filter(a => !!a).join('; ');
+  contacts.errors = Object.values({phone, email}).filter(a => !!a).join('; ');
 });
 
 // Изменение полей контактов + сохранение
@@ -168,11 +172,13 @@ Evtemitter.on(/^order\..*:change/, (data: { field: keyof IOrderForm, value: stri
 });
 
 // Изменение полей оплаты + сохранение
+// событие "payment:change"
 Evtemitter.on('payment:change', (item: HTMLButtonElement) => {
   appData.order.payment = item.name;
 })
 
 // Открытие модального окна и добавление в него рендера с информацией
+// событие "order:open"
 Evtemitter.on('order:open', () => {
   modal.render({
     content: order.render({
@@ -184,7 +190,8 @@ Evtemitter.on('order:open', () => {
   });
 });
 
-// Отправление формы заказа, то есть информация для заполнения 
+// Отправление формы заказа, то есть информация для заполнения
+// событие "order:submit" 
 Evtemitter.on('order:submit', () => {
   appData.order.total = appData.getTotal()
   modal.render({
@@ -198,6 +205,7 @@ Evtemitter.on('order:submit', () => {
 })
 
 // Открытие окна контактов при форме заказа
+// событие "contacts:submit" 
 Evtemitter.on('contacts:submit', () => {
     Api.orderProducts(appData.order)
     .then((result) => {
@@ -222,11 +230,13 @@ Evtemitter.on('contacts:submit', () => {
 });
 
 // Блокируем прокрутку страницы если открыта модалка
+// событие "modal:open" 
 Evtemitter.on('modal:open', () => {
     page.locked = true;
 });
 
 // Разблокируем прокрутку страницы если открыта модалка
+// событие "modal:close" 
 Evtemitter.on('modal:close', () => {
     page.locked = false;
 });
