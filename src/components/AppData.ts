@@ -4,12 +4,6 @@ import { IAppState, IProductItem, IOrder, IOrderForm, FormErrors } from "../type
 import { Model } from "./base/Model"; 
 // на основе дженерика конструктора создаем AppData, для записи информации о товаре, о заказе и информации пользователя
 export class AppData extends Model<IAppState> {
-  isItemAvailable(item: Product) {
-      throw new Error('Method not implemented.');
-  }
-  isItemInBasket(item: Product) {
-      throw new Error('Method not implemented.');
-  }
   preview: string;  
   catalog: Product[];
   order: IOrder = {
@@ -38,7 +32,6 @@ export class AppData extends Model<IAppState> {
       this.order.items.splice( index, 1 );
     }
   }
-  
   // установка данных в каталог
   setCatalog(items: IProductItem[]) {
     this.catalog = items.map(item => new Product(item, this.events));
