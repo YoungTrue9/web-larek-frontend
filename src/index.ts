@@ -18,8 +18,8 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
 // нужные передачи из ВНЕ
-const Evtemitter = new EventEmitter();
 const Api = new Apilarek(CDN_URL, API_URL);
+const Evtemitter = new EventEmitter();
 
 Evtemitter.onAll(({ eventName, data }) => {
   console.log(eventName, data);
@@ -47,7 +47,7 @@ const basket = new Basket(cloneTemplate<HTMLTemplateElement>(basketTemplate), Ev
 const order = new Order(cloneTemplate<HTMLFormElement>(orderTemplate), Evtemitter); // заказ покупателя
 const contacts = new Сontacts(cloneTemplate<HTMLFormElement>(contactsTemplate), Evtemitter); // данные о покупателе
 
-// Бизнес-логика нашего проекта
+// Бизнес логика нашего проекта на событиях
 
 // Самое главное получение карточки и передача ее в модель. Все происходит через метод 'on'
 // событие "items:changed"
@@ -171,8 +171,8 @@ Evtemitter.on(/^contacts\..*:change/, (data: { field: keyof IOrderForm, value: s
 // событие "formErrors:change"
 Evtemitter.on('formErrors:change', (errors: Partial<IOrderForm>) => {
   const { phone, email, payment, address } = errors;
-  order.valid = !address && !payment;
   contacts.valid = !email && !phone;
+  order.valid = !address && !payment;
   order.errors = Object.values({address, payment}).filter(
     element => !!element
     ).join('; ');
