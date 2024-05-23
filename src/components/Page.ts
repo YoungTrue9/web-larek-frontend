@@ -13,7 +13,7 @@ export class Page extends Component<IPage> {
   protected _basket: HTMLElement;
   protected _wrapper: HTMLElement;
 
-  constructor(container: HTMLElement, protected evt: IEvents) {
+  constructor(container: HTMLElement, protected event: IEvents) {
     super(container);
 
     this._catalog = ensureElement<HTMLElement>('.gallery'); // разметка каталога товаров 
@@ -22,7 +22,7 @@ export class Page extends Component<IPage> {
     this._wrapper = ensureElement<HTMLElement>('.page__wrapper'); // обертка, разметка страницы которую будет хранить
     // открытие корзины
     this._basket.addEventListener('click', () => {
-      this.evt.emit('basket:open');
+      this.event.emit('basket:open');
     });
   }
   // установка значения в счетчике товаров корзины
