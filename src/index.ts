@@ -18,8 +18,8 @@ import { API_URL, CDN_URL } from './utils/constants';
 import { cloneTemplate, ensureElement } from './utils/utils';
 
 // нужные передачи из ВНЕ
-const Evtemitter = new EventEmitter();
 const api = new ApiLarek(CDN_URL, API_URL);
+const Evtemitter = new EventEmitter();
 
 Evtemitter.onAll(({ eventName, data }) => {
 	console.log(eventName, data);
