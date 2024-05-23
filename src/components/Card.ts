@@ -70,7 +70,6 @@ interface ICardPreview {
   text: string;
 }
 // Расширение класса Card<T> по интерфейсу ICardPreview, данный класс нам нужен будет для отображения карточек на экране монитора, так же экспоритруем
-
 export class CardPreview extends Card<ICardPreview> {
   protected _text: HTMLElement;
   protected _button: HTMLElement;
