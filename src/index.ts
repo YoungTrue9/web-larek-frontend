@@ -6,7 +6,7 @@ import { Success } from './components/Success';
 // components/base
 import { EventEmitter } from './components/base/Events';
 // components
-import { ApiLarek } from './components/Apilarek';
+import { ApiLarek } from './components/ApiLarek';
 import { AppData, Product } from './components/AppData';
 import { Card, CardBasket, CardPreview } from './components/Card';
 import { Page } from './components/Page';
