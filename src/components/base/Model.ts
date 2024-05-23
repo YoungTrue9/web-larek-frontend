@@ -1,5 +1,5 @@
 import { IEvents } from "./events";
-
+// Абстрактный класс дженерик, конструктор, метод привязки события.
 export abstract class Model<T> {
   constructor(data: Partial<T>, protected events: IEvents) {
     Object.assign(this, data);
