@@ -55,17 +55,15 @@ export class Card<T> extends Component<ICard> {
   set image(value: string) {
     this.setImage(this._image, value, this.title);
   }
-  // метод установки содержимой цены с ветвлением по цене
-  set price(value: string) {
-    // если цены нету то выводим 'Бесценно'
-    if(value === null) {
-      this.setText(this._price, `Бесценно`);
-    } 
-    // или выводим через value сумму 
-    else {
-      this.setText(this._price, `${value} синапсов`);
+   // установка цены товара, если цены нету то ставим по умолчанию 'Бесценно'
+   set price(value: number) {
+    if (value) {
+        this.setText(this._price, `${String(value)} синапсов`);
+    } else {
+        this.setText(this._price, 'Бесценно 🗿');
+        
     }
-  }
+}
 }
 // интерфейс ICardPreview
 interface ICardPreview {
@@ -127,17 +125,8 @@ export class CardBasket extends Component<ICardBasket> {
   set title(value: string) {
     this.setText(this._title, value);
   }
-  // установка цены товара, если цены нету то ставим по умолчанию 'Бесценно'
-  set price(value: string) {
-    // если цены нету то выводим 'Бесценно'
-    if(value === null) {
-      this.setText(this._price, `Бесценно`);
-    } 
-    // или выводим через value сумму 
-    else {
-      this.setText(this._price, `${value} синапсов`);
-    }
-  }
+
+  
 }
 
   
