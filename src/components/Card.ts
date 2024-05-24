@@ -171,7 +171,7 @@ export class CardBasket extends Component<ICardBasket> {
     if(value === null) { 
       this.setText(this._price, `Бесценно`); 
     }  
-    // или выводим через value сумму  
+    // или выводим через value сумму.  
     else { 
       this.setText(this._price, `${value} синапсов`); 
     } 
