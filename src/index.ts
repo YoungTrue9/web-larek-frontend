@@ -1,6 +1,8 @@
 import './scss/styles.scss';
 // components/common
 import { Basket } from './components/Basket';
+import { ProductItemBasket } from './components/Basket';
+// import { ProductItemBasket } from './components/Basket';
 import { Modal } from './components/common/Modal';
 import { Success } from './components/Success';
 // components/base
@@ -84,8 +86,85 @@ Evtemitter.on('items:changed', () => {
 // событие "card:select"
 Evtemitter.on('card:select', (item: Product) => {
 	// попытка получить данные
-	appData.setPreview(item);
+    
+	page.locked = true;
+    
+	const productItemPreview = new CardPreview(
+		cloneTemplate(cardPreviewTemplate),
+		{
+			onClick: () => {
+				if (item.selected) {
+					Evtemitter.emit('basket:removeFromBasket', item);
+					modal.close();
+				} else {
+					Evtemitter.emit('card:addToBasket', item);
+					modal.close();
+				}
+                
+				productItemPreview.updateButton(item.selected);
+			},
+		}
+	);
+
+	productItemPreview.updateButton(item.selected);
+
+	modal.render({
+		content: productItemPreview.render({
+			id: item.id,
+			title: item.title,
+			image: item.image,
+			category: item.category,
+			description: item.description,
+			price: item.price,
+			selected: item.selected,
+		}),
+	});
+	
 });
+
+Evtemitter.on('card:addToBasket', (product: Product) => {
+	appData.addToBasket(product);
+	product.selected = true;
+	page.counter = appData.getCountProductInBasket();
+});
+
+
+
+Evtemitter.on('basket:removeFromBasket', (product: Product) => {
+	appData.removeFromBasket(product);
+	product.selected = false;
+	basket.total = appData.getTotalBasketPrice();
+	page.counter = appData.getCountProductInBasket();
+	const basketItems = appData.basket.map((item, index) => {
+		const productItem: ProductItemBasket = new ProductItemBasket(
+			'card',
+			cloneTemplate(cardBasketTemplate),
+			{
+				onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
+			}
+		);
+		return productItem.render({
+			title: item.title,
+			price: item.price,
+			index: index + 1,
+		});
+	});
+	modal.render({
+		content: basket.render({
+			items: basketItems,
+			total: appData.getTotalBasketPrice(),
+		}),
+	});
+	if (appData.getCountProductInBasket() == 0) {
+		basket.toggleButton(true);
+	}
+});
+
+
+
+
+
+
 
 // Данные для превью получены продолжаем работу для открытие окна
 // событие "preview:changed"
@@ -241,7 +320,8 @@ Evtemitter.on('modal:close', () => {
 // Открытие окна контактов при форме заказа
 // событие "contacts:submit"
 Evtemitter.on('contacts:submit', () => {
-	api.orderProducts(appData.order)
+	api
+		.orderProducts(appData.order)
 		.then(() => {
 			console.log(appData.order); // выводим данные о заказе, можно отключить данный console.log
 			const success = new Success(cloneTemplate(successTemplate), {
@@ -264,7 +344,8 @@ Evtemitter.on('contacts:submit', () => {
 });
 
 // Получаем товар с сервера
-api.getProductList() // откласса Apilarek
+api
+	.getProductList() // откласса Apilarek
 	.then(appData.setCatalog.bind(appData))
 	.catch((error) => {
 		console.log(error);
