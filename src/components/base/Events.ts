@@ -84,5 +84,3 @@ export class EventEmitter implements IEvents {
         };
     }
 }
-
-// reviews
