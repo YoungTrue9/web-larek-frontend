@@ -16,10 +16,10 @@ export class Page extends Component<IPage> {
 	constructor(container: HTMLElement, protected event: IEvents) {
 		super(container);
 
-		this._catalog = ensureElement<HTMLElement>('.gallery'); // разметка каталога товаров.
-		this._counter = ensureElement<HTMLElement>('.header__basket-counter'); // контейнер в котором будет информация о счете товаров в корзине.
-		this._basket = ensureElement<HTMLElement>('.header__basket'); // хранит разметку кнопки корзины.
-		this._wrapper = ensureElement<HTMLElement>('.page__wrapper'); // обертка, разметка страницы которую будет хранить.
+		this._catalog = ensureElement<HTMLElement>('.gallery'); // разметка каталога товаров
+		this._counter = ensureElement<HTMLElement>('.header__basket-counter'); // контейнер в котором будет информация о счете товаров в корзине
+		this._basket = ensureElement<HTMLElement>('.header__basket'); // хранит разметку кнопки корзины
+		this._wrapper = ensureElement<HTMLElement>('.page__wrapper'); // обертка, разметка страницы которую будет хранить
 		// открытие корзины
 		this._basket.addEventListener('click', () => {
 			this.event.emit('basket:open');
@@ -36,7 +36,7 @@ export class Page extends Component<IPage> {
 	// установка класса для прокрутки страницы (блокировка), навешиваем несколько классов с помощью которых блокируется прокрутка - 'page__wrapper_locked'
 	set locked(value: boolean) {
 		if (value) {
-            this.toggleClass(this._wrapper, 'page__wrapper_locked', true)
+			this.toggleClass(this._wrapper, 'page__wrapper_locked', true)
 		} else {
 			this.toggleClass(this._wrapper, 'page__wrapper_locked', false)
 		}
