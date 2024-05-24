@@ -22,39 +22,14 @@ export class AppData extends Model<IAppState> {
     this.order.items = []
   }
 
-
-
-
-
-
-
-
-// с помощью этой мелкой функции мы видим контект в корзине что залили туда за товар
+  
   addToBasket(product: Product) {
     this.basket.push(product);
 }
-// это для нашего товара в корзине делает счетчик
-  getCountProductInBasket() {
+
+getCountProductInBasket() {
     return this.basket.length;
 }
-getTotalBasketPrice() {
-    let total = 0;
-    this.basket.forEach((item) => {
-        total = total + item.price;
-    });
-
-    return total;
-}
-
-
-
-
-removeFromBasket(product: Product) {
-    this.basket = this.basket.filter((item) => item.id !== product.id);
-}
-
-
-
 
 
   //добавления товара в корзину и присоение ему id
@@ -159,8 +134,5 @@ export class Product extends Model<IProductItem> {
   category: string;
   image: string;
   price: number | null;
-  selected: boolean; // это нужно для того чтобы не могли добавить по новому продукт в корзину
+  selected: boolean; // это нам нужно для выбора флага есть или нету товара в корзине
 }
-
-
-
