@@ -29,22 +29,14 @@ export class AppData extends Model<IAppState> {
 
 
 
-
-
+// с помощью этой мелкой функции мы видим контект в корзине что залили туда за товар
+  addToBasket(product: Product) {
+    this.basket.push(product);
+}
+// это для нашего товара в корзине делает счетчик
   getCountProductInBasket() {
     return this.basket.length;
 }
-
-addToBasket(product: Product) {
-    this.basket.push(product);
-}
-
-
-removeFromBasket(product: Product) {
-    this.basket = this.basket.filter((item) => item.id !== product.id);
-}
-
-
 getTotalBasketPrice() {
     let total = 0;
     this.basket.forEach((item) => {
@@ -53,6 +45,15 @@ getTotalBasketPrice() {
 
     return total;
 }
+
+
+
+
+removeFromBasket(product: Product) {
+    this.basket = this.basket.filter((item) => item.id !== product.id);
+}
+
+
 
 
 
