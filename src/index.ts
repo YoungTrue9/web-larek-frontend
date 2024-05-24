@@ -100,7 +100,7 @@ Evtemitter.on('card:select', (item: Product) => {
 					modal.close();
 				} else {
 					Evtemitter.emit('card:addToBasket', item);
-					modal.close();
+					// modal.close();
 				}
                 
 				productItemPreview.updateButton(item.selected);
@@ -123,7 +123,7 @@ Evtemitter.on('card:select', (item: Product) => {
 	});
 	
 });
-
+// добавляем карточку в корзину
 Evtemitter.on('card:addToBasket', (product: Product) => {
 	appData.addToBasket(product);
 	product.selected = true;
@@ -164,7 +164,31 @@ Evtemitter.on('basket:removeFromBasket', (product: Product) => {
 
 
 
-
+// Открытие корзины
+// событие "basket:open"
+Evtemitter.on('basket:open', () => {
+	page.locked = true;
+	const basketItems = appData.basket.map((item, index) => {
+		const productItem: ProductItemBasket = new ProductItemBasket(
+			'card',
+			cloneTemplate(cardBasketTemplate),
+			{
+				onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
+			}
+		);
+		return productItem.render({
+			title: item.title,
+			price: item.price,
+			index: index + 1,
+		});
+	});
+	modal.render({
+		content: basket.render({
+			items: basketItems,
+			total: appData.getTotalBasketPrice(),
+		}),
+	});
+});
 
 
 
@@ -204,27 +228,6 @@ Evtemitter.on('card:remove', (item: Product) => {
 	});
 });
 
-// Открытие корзины
-// событие "basket:open"
-Evtemitter.on('basket:open', () => {
-	basket.setDisabled(basket.button, appData.statusBasket);
-	basket.total = appData.getTotal();
-	let a = 1;
-	basket.items = appData.bskt.map((item) => {
-		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
-			// событие "card:remove"
-			onClick: () => Evtemitter.emit('card:remove', item),
-		});
-		return card.render({
-			title: item.title, // возвращение названия
-			price: item.price, // возвращение цены
-			index: a++, // возвращение индекса
-		});
-	});
-	modal.render({
-		content: basket.render(),
-	});
-});
 
 // Изменение полей контактов + сохранение
 Evtemitter.on(
