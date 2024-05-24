@@ -1,8 +1,6 @@
 import './scss/styles.scss';
 // components/common
 import { Basket } from './components/Basket';
-import { ProductItemBasket } from './components/Basket';
-// import { ProductItemBasket } from './components/Basket';
 import { Modal } from './components/common/Modal';
 import { Success } from './components/Success';
 // components/base
@@ -82,15 +80,12 @@ Evtemitter.on('items:changed', () => {
 	});
 });
 
-
-
 // Если пользователь нажал на карточку для просмотра, то открываем ее
 // событие "card:select"
 Evtemitter.on('card:select', (item: Product) => {
 	// попытка получить данные
-    
-	page.locked = true;
-    
+	// appData.setPreview(item);
+    page.locked = true;
 	const productItemPreview = new CardPreview(
 		cloneTemplate(cardPreviewTemplate),
 		{
@@ -100,15 +95,14 @@ Evtemitter.on('card:select', (item: Product) => {
 					modal.close();
 				} else {
 					Evtemitter.emit('card:addToBasket', item);
-					// modal.close();
+					modal.close();
 				}
-                
-				productItemPreview.updateButton(item.selected);
+				productItemPreview.updatePrice(item.selected);
 			},
 		}
 	);
 
-	productItemPreview.updateButton(item.selected);
+	productItemPreview.updatePrice(item.selected);
 
 	modal.render({
 		content: productItemPreview.render({
@@ -121,87 +115,48 @@ Evtemitter.on('card:select', (item: Product) => {
 			selected: item.selected,
 		}),
 	});
-	
-});
-// добавляем карточку в корзину
-Evtemitter.on('card:addToBasket', (product: Product) => {
-	appData.addToBasket(product);
-	product.selected = true;
-	page.counter = appData.getCountProductInBasket();
 });
 
 
-
-Evtemitter.on('basket:removeFromBasket', (product: Product) => {
-	appData.removeFromBasket(product);
-	product.selected = false;
-	basket.total = appData.getTotalBasketPrice();
-	page.counter = appData.getCountProductInBasket();
-	const basketItems = appData.basket.map((item, index) => {
-		const productItem: ProductItemBasket = new ProductItemBasket(
-			'card',
-			cloneTemplate(cardBasketTemplate),
-			{
-				onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
-			}
-		);
-		return productItem.render({
-			title: item.title,
-			price: item.price,
-			index: index + 1,
-		});
-	});
-	modal.render({
-		content: basket.render({
-			items: basketItems,
-			total: appData.getTotalBasketPrice(),
-		}),
-	});
-	if (appData.getCountProductInBasket() == 0) {
-		basket.toggleButton(true);
-	}
-});
-
-
-
-// Открытие корзины
-// событие "basket:open"
-Evtemitter.on('basket:open', () => {
-	page.locked = true;
-	const basketItems = appData.basket.map((item, index) => {
-		const productItem: ProductItemBasket = new ProductItemBasket(
-			'card',
-			cloneTemplate(cardBasketTemplate),
-			{
-				onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
-			}
-		);
-		return productItem.render({
-			title: item.title,
-			price: item.price,
-			index: index + 1,
-		});
-	});
-	modal.render({
-		content: basket.render({
-			items: basketItems,
-			total: appData.getTotalBasketPrice(),
-		}),
-	});
-});
-
-
-
+// Evtemitter.on('card:addToBasket', (item: Product) => {
+// 	appData.addToBasket(item);
+// 	item.selected = true;
+// 	page.counter = appData.getCountProductInBasket();
+//     page.counter = appData.bskt.length;
+// });
 
 
 // Пользователь добавил товар в корзину, сохраняем данные и делаем счетчик.
 // событие "card:add"
-Evtemitter.on('card:add', (item: Product) => {
-	appData.addToOrder(item);
+Evtemitter.on('card:addToBasket', (item: Product) => {
+	appData.addToOrder(item);// считает синапсы, это прям очень нам надо
+    item.selected = true
 	appData.setProductToBasket(item);
 	page.counter = appData.bskt.length;
 	modal.close();
 });
+
+// Данные для превью получены продолжаем работу для открытие окна
+// событие "preview:changed"
+Evtemitter.on('preview:changed', (item: Product) => {
+	//делаем клонирование карточки и дублируем через рендер туда информацию
+	const card = new CardPreview(cloneTemplate(cardPreviewTemplate), {
+		// событие "card:add"
+		onClick: () => Evtemitter.emit('card:add', item),
+	});
+	// в модальное окно рендарим (дублируем) данные карточек
+	modal.render({
+		content: card.render({
+			title: item.title, // название
+			text: item.description, // описание
+			category: item.category, // категория
+			image: api.cdn + item.image, // картинка
+			price: item.price, // цена
+		}),
+	});
+});
+
+
 
 // Удаление товара из корзины, удаление данных и снижение числа в счетчике
 // событие "card:remove"
@@ -228,6 +183,27 @@ Evtemitter.on('card:remove', (item: Product) => {
 	});
 });
 
+// Открытие корзины
+// событие "basket:open"
+Evtemitter.on('basket:open', () => {
+	basket.setDisabled(basket.button, appData.statusBasket);
+	basket.total = appData.getTotal();
+	let a = 1;
+	basket.items = appData.bskt.map((item) => {
+		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
+			// событие "card:remove"
+			onClick: () => Evtemitter.emit('card:remove', item),
+		});
+		return card.render({
+			title: item.title, // возвращение названия
+			price: item.price, // возвращение цены
+			index: a++, // возвращение индекса
+		});
+	});
+	modal.render({
+		content: basket.render(),
+	});
+});
 
 // Изменение полей контактов + сохранение
 Evtemitter.on(
@@ -307,8 +283,7 @@ Evtemitter.on('modal:close', () => {
 // Открытие окна контактов при форме заказа
 // событие "contacts:submit"
 Evtemitter.on('contacts:submit', () => {
-	api
-		.orderProducts(appData.order)
+	api.orderProducts(appData.order)
 		.then(() => {
 			console.log(appData.order); // выводим данные о заказе, можно отключить данный console.log
 			const success = new Success(cloneTemplate(successTemplate), {
@@ -331,8 +306,7 @@ Evtemitter.on('contacts:submit', () => {
 });
 
 // Получаем товар с сервера
-api
-	.getProductList() // откласса Apilarek
+api.getProductList() // откласса Apilarek
 	.then(appData.setCatalog.bind(appData))
 	.catch((error) => {
 		console.log(error);
