@@ -21,6 +21,41 @@ export class AppData extends Model<IAppState> {
     this.basket = []
     this.order.items = []
   }
+
+
+
+
+
+
+
+
+
+
+  getCountProductInBasket() {
+    return this.basket.length;
+}
+
+addToBasket(product: Product) {
+    this.basket.push(product);
+}
+
+
+removeFromBasket(product: Product) {
+    this.basket = this.basket.filter((item) => item.id !== product.id);
+}
+
+
+getTotalBasketPrice() {
+    let total = 0;
+    this.basket.forEach((item) => {
+        total = total + item.price;
+    });
+
+    return total;
+}
+
+
+
   //добавления товара в корзину и присоение ему id
   addToOrder(item: Product) {
     this.order.items.push(item.id)
@@ -123,4 +158,8 @@ export class Product extends Model<IProductItem> {
   category: string;
   image: string;
   price: number | null;
+  selected: boolean; // это нужно для того чтобы не могли добавить по новому продукт в корзину
 }
+
+
+
