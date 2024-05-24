@@ -9,6 +9,9 @@ interface ICard {
     image: string; 
     price: number; 
     text: string; 
+    id: string; // это нам пригодится для того чтобы товар один попадал в корзину
+    description: string; // это нам пригодится для того чтобы товар один попадал в корзину
+    selected: boolean; // это нам пригодится для того чтобы товар один попадал в корзину
 } 
  
 // опциональный обьект c типом ICardActions (событие actions) 
@@ -22,6 +25,7 @@ export class Card<T> extends Component<ICard> {
   protected _category: HTMLElement; // категория 
   protected _price: HTMLElement; // цена 
   protected _button?: HTMLButtonElement; // тут выводится наша кнопка disabled
+  protected _description: HTMLElement;
   protected _categoryColor = <Record<string, string>> { // опсания категории 
     "софт-скил": "soft", 
     "другое": "other", 
@@ -36,8 +40,9 @@ export class Card<T> extends Component<ICard> {
     this._image = ensureElement<HTMLImageElement>(`.card__image`, container); // для передачи в html картинки 
     this._category = ensureElement<HTMLElement>(`.card__category`, container); // для передачи в html категории 
     this._price = ensureElement<HTMLElement>(`.card__price`, container); // для передачи в html цены 
-    // this._button = ensureElement<HTMLElement>(`.card__button`, container);
- 
+    this._description = container.querySelector(`.card__description`);
+    this._button = container.querySelector(`.card__button`);
+
     if (actions?.onClick) {
         if (this._button) {
             this._button.addEventListener('click', actions.onClick);
@@ -60,19 +65,46 @@ export class Card<T> extends Component<ICard> {
   set image(value: string) { 
     this.setImage(this._image, value, this.title); 
   } 
-  // метод установки содержимой цены с ветвлением по цене 
-  set price(value: string) { 
-    // если цены нету то выводим 'Бесценно' 
-    if(value === null) { 
-      this.setText(this._price, `Бесценно`); 
+
+
+
+set price(value: number | null) {
+    this.setText(
+      this._price,
+      value ? `${value.toString()} синапсов` : 'Бесценно'
+    );
+
+    if (value === null) {
       this.setDisabled(this._button, true);
-    }  
-    // или выводим через value сумму  
-    else { 
-      this.setText(this._price, `${value} синапсов`); 
+      this.setText(this._button, 'Нельзя купить');
+    }
+  }
+  // выводим цену или 0 
+  get price (): number {
+    return +this._price.textContent || 0;
+  }
+ // ветвление на выбор покупки
+  set button(value: string) {
+    // если бесценно то кнопку делаем нерабочий и добавляем текст "Нельзя купить"
+    if (this._price.textContent === 'Бесценно') {
+      this.setDisabled(this._button, true);
+      this.setText(this._button, 'Нельзя купить');
     } 
-  } 
+    // или просто выводим инфу стандарт
+    else {
+      this.setText(this._button, value);
+    }
+  }
+  // этот метод нужен для того чтобы мы могли добавлять только один товар
+  updateButton(selected: boolean) {
+    if (selected) {
+      this.button = 'Убрать из корзины';
+    } else {
+      this.button = 'В корзину';
+    }
+  }
 } 
+
 // интерфейс ICardPreview 
 interface ICardPreview { 
   text: string; 
