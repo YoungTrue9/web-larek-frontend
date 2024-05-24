@@ -1,7 +1,6 @@
-import { createElement, ensureElement } from '../utils/utils';
+import { createElement } from '../utils/utils';
 import { Component } from './base/Component';
 import { EventEmitter } from './base/Events';
-
 interface IBasket {
 	items: HTMLElement[];
 	total: number;
@@ -15,7 +14,7 @@ export class Basket extends Component<IBasket> {
 	constructor(container: HTMLElement, protected events: EventEmitter) {
 		super(container);
 
-		this._list = ensureElement<HTMLElement>('.basket__list', this.container);
+		this._list = this.container.querySelector('.basket__list');
 		this._total = this.container.querySelector('.basket__price');
 		this.button = this.container.querySelector('.basket__button');
 
