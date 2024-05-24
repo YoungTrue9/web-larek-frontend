@@ -21,7 +21,7 @@ export class Order extends Form<IOrderForm> {
 			});
 		});
 	}
-	// устанавливает класс активности на кнопку - (active)
+	// устанавливает класс активности на кнопку (active)
 	set payment(name: string) {
 		this._buttons.forEach((button) => {
 			this.toggleClass(button, 'button_alt-active', button.name === name);
