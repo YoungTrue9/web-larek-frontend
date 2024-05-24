@@ -7,7 +7,7 @@ export class ApiLarek extends Api {
 
   constructor(cdn: string, baseUrl: string, options?: RequestInit) {
     super(baseUrl, options)
-    this.cdn = cdn; // наш url
+    this.cdn = cdn; // наш URL
   }
   // метод для получения списка товаров с сервера
   getProductList() {
