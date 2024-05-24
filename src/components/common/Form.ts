@@ -41,7 +41,7 @@ export class Form<T> extends Component<IFormState> {
 	}
 
 	set valid(value: boolean) {
-		this.setDisabled(this._submit, !value)
+		this._submit.disabled = !value;
 	}
 
 	set errors(value: string) {
