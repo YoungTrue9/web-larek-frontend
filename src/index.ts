@@ -82,6 +82,8 @@ Evtemitter.on('items:changed', () => {
 	});
 });
 
+
+
 // Если пользователь нажал на карточку для просмотра, то открываем ее
 // событие "card:select"
 Evtemitter.on('card:select', (item: Product) => {
@@ -112,7 +114,7 @@ Evtemitter.on('card:select', (item: Product) => {
 		content: productItemPreview.render({
 			id: item.id,
 			title: item.title,
-			image: item.image,
+			image: api.cdn + item.image,
 			category: item.category,
 			description: item.description,
 			price: item.price,
@@ -166,25 +168,7 @@ Evtemitter.on('basket:removeFromBasket', (product: Product) => {
 
 
 
-// Данные для превью получены продолжаем работу для открытие окна
-// событие "preview:changed"
-Evtemitter.on('preview:changed', (item: Product) => {
-	//делаем клонирование карточки и дублируем через рендер туда информацию
-	const card = new CardPreview(cloneTemplate(cardPreviewTemplate), {
-		// событие "card:add"
-		onClick: () => Evtemitter.emit('card:add', item),
-	});
-	// в модальное окно рендарим (дублируем) данные карточек
-	modal.render({
-		content: card.render({
-			title: item.title, // название
-			text: item.description, // описание
-			category: item.category, // категория
-			image: api.cdn + item.image, // картинка
-			price: item.price, // цена
-		}),
-	});
-});
+
 
 // Пользователь добавил товар в корзину, сохраняем данные и делаем счетчик.
 // событие "card:add"
