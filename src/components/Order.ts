@@ -39,12 +39,12 @@ export class Сontacts extends Form<IOrderForm> {
 	constructor(container: HTMLFormElement, evt: IEvents) {
 		super(container, evt);
 	}
-	// устанавливает значение поля телефона (строка под номер телефона пользователя)
+	// устанавливает значение поля телефона (строка под номер телефона пользователя).
 	set phone(value: string) {
 		(this.container.elements.namedItem('phone') as HTMLInputElement).value =
 			value;
 	}
-	// устанавливает значение поля почты (строка под электронный адрес почты пользователя)
+	// устанавливает значение поля почты (строка под электронный адрес почты пользователя).
 	set email(value: string) {
 		(this.container.elements.namedItem('email') as HTMLInputElement).value =
 			value;
