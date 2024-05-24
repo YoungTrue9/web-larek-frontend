@@ -118,14 +118,6 @@ Evtemitter.on('card:select', (item: Product) => {
 });
 
 
-// Evtemitter.on('card:addToBasket', (item: Product) => {
-// 	appData.addToBasket(item);
-// 	item.selected = true;
-// 	page.counter = appData.getCountProductInBasket();
-//     page.counter = appData.bskt.length;
-// });
-
-
 // Пользователь добавил товар в корзину, сохраняем данные и делаем счетчик.
 // событие "card:add"
 Evtemitter.on('card:addToBasket', (item: Product) => {
@@ -157,12 +149,11 @@ Evtemitter.on('preview:changed', (item: Product) => {
 });
 
 
-
-// Удаление товара из корзины, удаление данных и снижение числа в счетчике
-// событие "card:remove"
-Evtemitter.on('card:remove', (item: Product) => {
-	appData.removeProductToBasket(item);
+Evtemitter.on('basket:removeFromBasket', (item: Product) => {
+    appData.removeProductToBasket(item);
+    item.selected = false;
 	appData.removeFromOrder(item);
+    
 	page.counter = appData.bskt.length;
 	basket.setDisabled(basket.button, appData.statusBasket);
 	basket.total = appData.getTotal();
@@ -170,7 +161,7 @@ Evtemitter.on('card:remove', (item: Product) => {
 	basket.items = appData.bskt.map((item) => {
 		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
 			// событие "card:remove"
-			onClick: () => Evtemitter.emit('card:remove', item),
+			onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
 		});
 		return card.render({
 			title: item.title, // возвращение названия
@@ -181,6 +172,9 @@ Evtemitter.on('card:remove', (item: Product) => {
 	modal.render({
 		content: basket.render(),
 	});
+    // if (appData.getCountProductInBasket() == 0) {
+	// 	basket.updatePrice(true);
+	// }
 });
 
 // Открытие корзины
@@ -192,7 +186,7 @@ Evtemitter.on('basket:open', () => {
 	basket.items = appData.bskt.map((item) => {
 		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
 			// событие "card:remove"
-			onClick: () => Evtemitter.emit('card:remove', item),
+			onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
 		});
 		return card.render({
 			title: item.title, // возвращение названия
