@@ -16,7 +16,7 @@ export class ApiLarek extends Api {
         return data.items.map((item) => ({ ...item }))
       })
   }
-  // метод для отправки данных заказов на сервер
+  // метод для отправки данных заказов на серверa
   orderProducts(order: IOrder): Promise<IOrderResult> {
     return this.post('/order', order).then(
         (data: IOrderResult) => data
