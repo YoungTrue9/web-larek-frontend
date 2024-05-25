@@ -118,6 +118,14 @@ Evtemitter.on('card:select', (item: Product) => {
 });
 
 
+// Evtemitter.on('card:addToBasket', (item: Product) => {
+// 	appData.addToBasket(item);
+// 	item.selected = true;
+// 	page.counter = appData.getCountProductInBasket();
+//     page.counter = appData.bskt.length;
+// });
+
+
 // Пользователь добавил товар в корзину, сохраняем данные и делаем счетчик.
 // событие "card:add"
 Evtemitter.on('card:addToBasket', (item: Product) => {
@@ -127,6 +135,34 @@ Evtemitter.on('card:addToBasket', (item: Product) => {
 	page.counter = appData.bskt.length;
 	modal.close();
 });
+
+
+// Удаление товара из корзины, удаление данных и снижение числа в счетчике
+// событие "card:remove"
+Evtemitter.on('basket:removeFromBasket', (item: Product) => {
+	appData.removeProductToBasket(item);
+    item.selected = false;
+	appData.removeFromOrder(item);
+	page.counter = appData.bskt.length;
+	basket.setDisabled(basket.button, appData.statusBasket);
+	basket.total = appData.getTotal();
+	let a = 1;
+	basket.items = appData.bskt.map((item) => {
+		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
+			// событие "card:remove"
+			onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
+		});
+		return card.render({
+			title: item.title, // возвращение названия
+			price: item.price, // возвращение цены
+			index: a++, // возвращение индекса
+		});
+	});
+	modal.render({
+		content: basket.render(),
+	});
+});
+
 
 // Данные для превью получены продолжаем работу для открытие окна
 // событие "preview:changed"
@@ -149,33 +185,6 @@ Evtemitter.on('preview:changed', (item: Product) => {
 });
 
 
-Evtemitter.on('basket:removeFromBasket', (item: Product) => {
-    appData.removeProductToBasket(item);
-    item.selected = false;
-	appData.removeFromOrder(item);
-    
-	page.counter = appData.bskt.length;
-	basket.setDisabled(basket.button, appData.statusBasket);
-	basket.total = appData.getTotal();
-	let a = 1;
-	basket.items = appData.bskt.map((item) => {
-		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
-			// событие "card:remove"
-			onClick: () => Evtemitter.emit('basket:removeFromBasket', item),
-		});
-		return card.render({
-			title: item.title, // возвращение названия
-			price: item.price, // возвращение цены
-			index: a++, // возвращение индекса
-		});
-	});
-	modal.render({
-		content: basket.render(),
-	});
-    // if (appData.getCountProductInBasket() == 0) {
-	// 	basket.updatePrice(true);
-	// }
-});
 
 // Открытие корзины
 // событие "basket:open"
