@@ -101,7 +101,7 @@ getCountProductInBasket() {
       const errors: typeof this.formErrors = {};
       // нету адреса, выводим текстовую ошибку
       if (!this.order.address) {
-        errors.address = 'Необходимо указать адресс';
+        errors.address = 'Необходимо указать адресс'; // здесь нельзя добавить seText
       }
       this.formErrors = errors;
       this.events.emit('formErrors:change', this.formErrors);
@@ -112,11 +112,11 @@ getCountProductInBasket() {
       const errors: typeof this.formErrors = {};
       // если нету email то выводим ошибку
       if (!this.order.email) {
-          errors.email = 'Необходимо указать email';
+          errors.email = 'Необходимо указать email'; // здесь нельзя добавить seText
       }
       // если нету phone выводим ошибку
       if (!this.order.phone) {
-          errors.phone = 'Необходимо указать телефон';
+          errors.phone = 'Необходимо указать телефон'; // здесь нельзя добавить seText
       }
       
       this.formErrors = errors;
