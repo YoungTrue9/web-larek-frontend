@@ -25,6 +25,6 @@ export class Success extends Component<ISuccess> {
   }
 
   set total(value: string) {
-    this._total.textContent = `Списано ${value} синапсов`;
+    this.setText(this._total, `Списано ${value} синапсов`) // обновление, добавление через sexText на ревью
   }
 }
