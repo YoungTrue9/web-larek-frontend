@@ -43,9 +43,30 @@ export class Card<T> extends Component<ICard> {
 
 
     if (actions?.onClick) {
-        container.addEventListener('click', actions.onClick);
+        if (this._button) {
+            this._button.addEventListener('click', actions.onClick);
+        } else {
+            container.addEventListener('click', actions.onClick);
+        }
     }
   }
+
+  set price(value: number | null) {
+    this.setText(
+      this._price,
+      value ? `${value.toString()} синапсов` : 'Бесценно'
+    );
+
+    if (value === null) {
+      this.setDisabled(this._button, true);
+      this.setText(this._button, 'Нельзя купить');
+    }
+  }
+
+  get price (): number {
+    return +this._price.textContent || 0;
+  }
+
   // метод установки содержимого заголовка
   set title(value: string) {
     this.setText(this._title, value);
@@ -61,24 +82,20 @@ export class Card<T> extends Component<ICard> {
     this.setImage(this._image, value, this.title);
   }
   // метод установки содержимой цены с ветвлением по цене
-  set price(value: string) {
-    // если цены нету то выводим 'Бесценно'
-    if(value === null) {
-      this.setText(this._price, `Бесценно`);
-      this.setDisabled(this._button, true); // блокируем кнопку для нажатия через деактив
-      this.setText(this._button, 'Нельзя купить'); // это текст на саму кнопку чтобы было понятно почему кнопка не работает
-    } 
-    // или выводим через value сумму 
-    else {
-      this.setText(this._price, `${value} синапсов`);
+  set button(value: string) {
+    if (this._price.textContent === 'Бесценно') {
+      this.setDisabled(this._button, true);
+      this.setText(this._button, 'Нельзя купить');
+    } else {
+      this.setText(this._button, value);
     }
   }
   // это нужно для того чтобы товар не попадал второй раз в корзину, для этого поможет selected - выбранный не выбранный.
   updatePrice(selected: boolean) {
     if (selected) {
-      this.price = 'Убрать из корзины';
+      this.button = 'Убрать из корзины';
     } else {
-      this.price = 'В корзину';
+      this.button = 'В корзину';
     }
   }
 }
