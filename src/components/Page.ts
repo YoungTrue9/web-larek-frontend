@@ -34,11 +34,7 @@ export class Page extends Component<IPage> {
 		this._catalog.replaceChildren(...items);
 	}
 	// установка класса для прокрутки страницы (блокировка), навешиваем несколько классов с помощью которых блокируется прокрутка - 'page__wrapper_locked'
-	set locked(value: boolean) {
-		if (value) {
-			this.toggleClass(this._wrapper, 'page__wrapper_locked', true)
-		} else {
-			this.toggleClass(this._wrapper, 'page__wrapper_locked', false)
-		}
-	}
+    set locked(value: boolean) {
+        this.toggleClass(this._wrapper, 'page__wrapper_locked', value);
+    } 
 }
