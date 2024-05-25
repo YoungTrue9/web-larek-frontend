@@ -93,9 +93,9 @@ export class Card<T> extends Component<ICard> {
   // это нужно для того чтобы товар не попадал второй раз в корзину, для этого поможет selected - выбранный не выбранный.
   updatePrice(selected: boolean) {
     if (selected) {
-      this.button = 'Убрать из корзины';
+      this.setText(this._button, 'Убрать из корзины'); // обновление, добавление через sexText на ревью
     } else {
-      this.button = 'В корзину';
+      this.setText(this._button, 'В корзину'); // обновление, добавление через sexText на ревью
     }
   }
 }
