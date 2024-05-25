@@ -2,6 +2,7 @@ import { Api, ApiListResponse } from './base/Api';
 import { IOrder, IProductItem, IOrderResult } from '../types';
 
 // Основной главный класс работующий в проекте с сетью, расширение базового класса Api.
+
 export class ApiLarek extends Api {
 	cdn: string;
 
